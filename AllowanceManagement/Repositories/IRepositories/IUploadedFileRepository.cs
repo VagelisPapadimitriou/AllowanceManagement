@@ -2,7 +2,7 @@
 
 namespace AllowanceManagement.Repositories.IRepositories
 {
-    public interface ICategoryPercentagesRepository : IRepository<CategoryPercentages>
+    public interface IUploadedFileRepository : IRepository<UploadedFile>
     {
     }
 }

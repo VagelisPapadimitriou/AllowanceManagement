@@ -1,30 +1,29 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace AllowanceManagement.Models
 {
     public class Employee
     {
         [Key]
-        public int AM { get; set; }
+        [Required(ErrorMessage = "Ο Αριθμός Μητρώου είναι υποχρεωτικός")]
+        [DisplayName("Αριθμός Μητρώου")]
+        public string AM { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Το Όνομα είναι υποχρεωτικό")]
         [StringLength(100)]
+        [DisplayName("Όνομα")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Το Επώνυμο είναι υποχρεωτικό")]
         [StringLength(100)]
+        [DisplayName("Επώνυμο")]
         public string LastName { get; set; }
 
-        [Required]
-        public int Rank { get; set; }
+        [DisplayName("Πλεύσιμες Ημέρες")]
+        public int SeaDay { get; set; }
 
-        [Required]
-        [StringLength(1)]
-        public string Category { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal Allowance { get; set; }
     }
 }

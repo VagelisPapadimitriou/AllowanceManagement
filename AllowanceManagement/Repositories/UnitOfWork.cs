@@ -7,19 +7,17 @@ namespace AllowanceManagement.Repositories
     {
         private ApplicationDbContext _context;
         public IEmployeeRepository Employee { get; private set; }
-        public ICategoryPercentagesRepository CategoryPercentages { get; private set; }
-        public IRankAllowancesRepository RankAllowances { get; private set; }
-        public ISeaDaysRepository SeaDays { get; private set; }
-        public IUploadedFilesRepository UploadedFiles { get; private set; }
+        public ICategoryPercentageRepository CategoryPercentage { get; private set; }
+        public IRankAmountRepository RankAmount { get; private set; }
+        public IUploadedFileRepository UploadedFile { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Employee = new EmployeeRepository(_context);
-            CategoryPercentages = new CategoryPercentagesRepository(_context);
-            RankAllowances = new RankAllowancesRepository(_context);
-            SeaDays = new SeaDaysRepository(_context);
-            UploadedFiles = new UploadedFilesRepository(_context);
+            CategoryPercentage = new CategoryPercentageRepository(_context);
+            RankAmount = new RankAmountRepository(_context);
+            UploadedFile = new UploadedFileRepository(_context);
         }
 
         public void Save()

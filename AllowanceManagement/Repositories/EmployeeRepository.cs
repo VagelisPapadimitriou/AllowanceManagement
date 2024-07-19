@@ -8,9 +8,11 @@ namespace AllowanceManagement.Repositories
     {
         public EmployeeRepository(ApplicationDbContext context) : base(context) { }
         public ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
-        public void Update()
-        {
 
+
+        public void Update(Employee emp)
+        {
+            Context.Update(emp);
         }
     }
 }

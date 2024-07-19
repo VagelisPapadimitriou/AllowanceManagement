@@ -4,5 +4,6 @@ namespace AllowanceManagement.Repositories.IRepositories
 {
     public interface IEmployeeRepository : IRepository<Employee>
     {
+        void Update(Employee emp);
     }
 }

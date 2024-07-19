@@ -22,7 +22,7 @@ namespace AllowanceManagement.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AllowanceManagement.Models.CategoryPercentages", b =>
+            modelBuilder.Entity("AllowanceManagement.Models.CategoryPercentage", b =>
                 {
                     b.Property<string>("Category")
                         .HasMaxLength(1)
@@ -38,19 +38,8 @@ namespace AllowanceManagement.Migrations
 
             modelBuilder.Entity("AllowanceManagement.Models.Employee", b =>
                 {
-                    b.Property<int>("AM")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AM"));
-
-                    b.Property<decimal>("Allowance")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
+                    b.Property<string>("AM")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -62,7 +51,7 @@ namespace AllowanceManagement.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Rank")
+                    b.Property<int>("SeaDay")
                         .HasColumnType("int");
 
                     b.HasKey("AM");
@@ -70,44 +59,27 @@ namespace AllowanceManagement.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("AllowanceManagement.Models.RankAllowances", b =>
+            modelBuilder.Entity("AllowanceManagement.Models.RankAmount", b =>
                 {
-                    b.Property<int>("RankAllowancesId")
+                    b.Property<int>("RankAmountId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RankAllowancesId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RankAmountId"));
 
                     b.Property<decimal>("BaseAmount")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.HasKey("RankAllowancesId");
+                    b.Property<string>("Rank")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("RankAllowances");
+                    b.HasKey("RankAmountId");
+
+                    b.ToTable("RankAmounts");
                 });
 
-            modelBuilder.Entity("AllowanceManagement.Models.SeaDays", b =>
-                {
-                    b.Property<int>("SeaDayId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SeaDayId"));
-
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalDays")
-                        .HasColumnType("int");
-
-                    b.HasKey("SeaDayId");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.ToTable("SeaDays");
-                });
-
-            modelBuilder.Entity("AllowanceManagement.Models.UploadedFiles", b =>
+            modelBuilder.Entity("AllowanceManagement.Models.UploadedFile", b =>
                 {
                     b.Property<int>("FileId")
                         .ValueGeneratedOnAdd()
@@ -131,17 +103,6 @@ namespace AllowanceManagement.Migrations
                     b.HasKey("FileId");
 
                     b.ToTable("UploadedFiles");
-                });
-
-            modelBuilder.Entity("AllowanceManagement.Models.SeaDays", b =>
-                {
-                    b.HasOne("AllowanceManagement.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

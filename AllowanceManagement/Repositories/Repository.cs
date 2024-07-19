@@ -1,6 +1,7 @@
 ﻿using AllowanceManagement.Data;
 using AllowanceManagement.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AllowanceManagement.Repositories
 {
@@ -13,7 +14,32 @@ namespace AllowanceManagement.Repositories
             Context = context;
         }
 
+        public void Add(T entity)
+        {
+            Context.Set<T>().Add(entity);
+            Context.SaveChanges();
+        }
 
+        public T Get(Expression<Func<T, bool>> filter)
+        {
+            return Context.Set<T>().FirstOrDefault(filter);
+        }
 
+        public IEnumerable<T> GetAll()
+        {
+            return Context.Set<T>().ToList();
+        }
+
+        public void Remove(T entity)
+        {
+            Context.Set<T>().Remove(entity);
+            Context.SaveChanges();
+        }
+
+        public void RemoveRange(IEnumerable<T> entity)
+        {
+            Context.Set<T>().RemoveRange(entity);
+            Context.SaveChanges();
+        }
     }
 }

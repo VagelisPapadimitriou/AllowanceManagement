@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AllowanceManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class EmptyDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,13 +27,10 @@ namespace AllowanceManagement.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    AM = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AM = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Rank = table.Column<int>(type: "int", nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
-                    Allowance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    SeaDay = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,16 +38,17 @@ namespace AllowanceManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RankAllowances",
+                name: "RankAmounts",
                 columns: table => new
                 {
-                    RankAllowancesId = table.Column<int>(type: "int", nullable: false)
+                    RankAmountId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Rank = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BaseAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankAllowances", x => x.RankAllowancesId);
+                    table.PrimaryKey("PK_RankAmounts", x => x.RankAmountId);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,31 +65,6 @@ namespace AllowanceManagement.Migrations
                 {
                     table.PrimaryKey("PK_UploadedFiles", x => x.FileId);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "SeaDays",
-                columns: table => new
-                {
-                    SeaDayId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeID = table.Column<int>(type: "int", nullable: false),
-                    TotalDays = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SeaDays", x => x.SeaDayId);
-                    table.ForeignKey(
-                        name: "FK_SeaDays_Employees_EmployeeID",
-                        column: x => x.EmployeeID,
-                        principalTable: "Employees",
-                        principalColumn: "AM",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SeaDays_EmployeeID",
-                table: "SeaDays",
-                column: "EmployeeID");
         }
 
         /// <inheritdoc />
@@ -101,16 +74,13 @@ namespace AllowanceManagement.Migrations
                 name: "CategoryPercentages");
 
             migrationBuilder.DropTable(
-                name: "RankAllowances");
+                name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "SeaDays");
+                name: "RankAmounts");
 
             migrationBuilder.DropTable(
                 name: "UploadedFiles");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
         }
     }
 }

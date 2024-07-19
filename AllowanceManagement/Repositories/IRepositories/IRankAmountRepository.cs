@@ -2,7 +2,8 @@
 
 namespace AllowanceManagement.Repositories.IRepositories
 {
-    public interface IRankAllowancesRepository : IRepository<RankAllowances>
+    public interface IRankAmountRepository: IRepository<RankAmount>
     {
+        IEnumerable<RankAmount> GetAll();
     }
 }

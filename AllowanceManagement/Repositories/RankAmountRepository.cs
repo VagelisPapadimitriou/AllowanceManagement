@@ -10,15 +10,9 @@ namespace AllowanceManagement.Repositories
         public RankAmountRepository(ApplicationDbContext context) : base(context) { }
         public ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
 
-        public IEnumerable<RankAmount> GetAll()
-        {
-            return ApplicationDbContext.RankAmounts.ToList();
-        }
-
         public void Update(RankAmount rankAmount)
         {
-            ApplicationDbContext.RankAmounts.Update(rankAmount);
+            Context.Update(rankAmount);
         }
-
     }
 }

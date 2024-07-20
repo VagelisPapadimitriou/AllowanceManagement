@@ -16,8 +16,7 @@
                     <label asp-for="AM" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input  disabled class="form-control border-0 shadow" />
-                    <label>Βαθμός</label>
+                    GIA TO RANK
                 </div>
                 <div class="form-floating py-2 col-12">
                     <input asp-for="FirstName" disabled class="form-control border-0 shadow" />
@@ -40,12 +39,12 @@
                              <button type="submit" class="btn btn-danger form-control" onclick="return confirm('Είστε σίγουρος για τη ΔΙΑΓΡΑΦΗ;');">Διαγραφή</button>
                         </div>
                         <div class="col-6 col-md-4">
-                            <a asp-controller="Employee" asp-action="Index" class="btn btn-outline-primary border form-control">
+                        <a asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.AM" class="btn btn-outline-primary border form-control">
                                 Επιστροφή
                             </a>
                         </div>
                     </div>
-             
+            </div>
         </form>
     </div>
 </div>

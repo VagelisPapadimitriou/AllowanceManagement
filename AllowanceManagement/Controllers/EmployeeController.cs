@@ -16,7 +16,7 @@ namespace AllowanceManagement.Controllers
         }
         public IActionResult Index()
         {
-            List<Employee> employeesList = _unitOfWork.Employee.GetAll().ToList();
+            List<Employee> employeesList = _unitOfWork.Employee.GetAllEmployeesWithRanksAndCategories().ToList();
             return View(employeesList);
         }
 
@@ -42,7 +42,7 @@ namespace AllowanceManagement.Controllers
                 return RedirectToAction("Index", "Employee");
             }
 
-            return View();
+            return View(emp);
 
         }
 
@@ -57,6 +57,7 @@ namespace AllowanceManagement.Controllers
             {
                 return NotFound();
             }
+
             return View(employeeFromDb);
         }
 
@@ -71,7 +72,7 @@ namespace AllowanceManagement.Controllers
                 return RedirectToAction("Index", "Employee");
             }
 
-            return View();
+            return View(emp);
 
         }
 
@@ -87,6 +88,7 @@ namespace AllowanceManagement.Controllers
             {
                 return NotFound();
             }
+
             return View(employeeFromDb);
         }
 
@@ -107,4 +109,6 @@ namespace AllowanceManagement.Controllers
         }
 
     }
+
+
 }

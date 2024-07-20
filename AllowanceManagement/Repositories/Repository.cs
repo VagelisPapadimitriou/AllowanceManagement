@@ -19,12 +19,10 @@ namespace AllowanceManagement.Repositories
             Context.Set<T>().Add(entity);
             Context.SaveChanges();
         }
-
         public T Get(Expression<Func<T, bool>> filter)
         {
             return Context.Set<T>().FirstOrDefault(filter);
         }
-
         public IEnumerable<T> GetAll()
         {
             return Context.Set<T>().ToList();

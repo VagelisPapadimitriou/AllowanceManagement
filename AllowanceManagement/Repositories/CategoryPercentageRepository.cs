@@ -8,9 +8,10 @@ namespace AllowanceManagement.Repositories
     {
         public CategoryPercentageRepository(ApplicationDbContext context) : base(context) { }
         public ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
-        public void Update()
-        {
 
+        public void Update(CategoryPercentage cp)
+        {
+            Context.Update(cp);
         }
     }
 }

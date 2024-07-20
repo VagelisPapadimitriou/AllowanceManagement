@@ -4,6 +4,6 @@ namespace AllowanceManagement.Repositories.IRepositories
 {
     public interface IRankAmountRepository: IRepository<RankAmount>
     {
-        IEnumerable<RankAmount> GetAll();
+        void Update(RankAmount rankAmount);
     }
 }

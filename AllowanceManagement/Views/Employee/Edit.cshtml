@@ -4,7 +4,7 @@
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Τροποποίηση Στοιχείων</h2>
+                <h2 class="text-white py-2">Επεξεργασία Στοιχείων</h2>
             </div>
         </div>
     </div>
@@ -19,8 +19,7 @@
                     <span asp-validation-for="AM" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input class="form-control border-0 shadow" />
-                    <label class="ms-2">Βαθμός</label>
+                   GIA TO RANK
                 </div>
                 <div class="form-floating py-2 col-12">
                     <input asp-for="FirstName" class="form-control border-0 shadow" />
@@ -44,12 +43,18 @@
                             <button type="submit" class="btn btn-primary form-control">Αποθήκευση</button>
                         </div>
                         <div class="col-6 col-md-4">
-                            <a asp-controller="Employee" asp-action="Index" class="btn btn-outline-primary border form-control">
+                            <a asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.AM" class="btn btn-outline-danger border form-control">
+                                Διαγραφή
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <a asp-controller="Employee" asp-action="Index" class="btn btn-outline-success border form-control">
                                 Επιστροφή
                             </a>
                         </div>
                     </div>
-               
+                </div>
+            </div>
         </form>
     </div>
 </div>

@@ -1,0 +1,66 @@
+﻿List<Employee>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-dark bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Προσωπικό</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="row">
+                <div class="col-8 text-end">
+                    <a asp-controller="Employee" asp-action="AnotherAction" class="btn btn-outline-success">
+                        <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i> Προσθήκη Αρχείου <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i>
+                    </a>
+                </div>
+                <div class="col-4 text-end">
+                    <a asp-controller="Employee" asp-action="Create" class="btn btn-info">
+                        <i class="bi bi-plus-square"></i> Προσθήκη Προσωπικού
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped text-center" style="vertical-align: middle;">
+            <thead>
+                <tr>
+                    <th style ="width: 10%;">ΑΜ</th>
+                    <th style ="width: 35%;">Βαθμός</th>
+                    <th style ="width: 15%;">Επώνυμο</th>
+                    <th style ="width: 10%;">Πλεύσιμες</th>
+                    <th style ="width: 30%;">Επιλογές </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emp in Model)
+                {
+                    <tr>
+                        <td>@emp.AM</td>
+                        <td>KENO RANK</td>
+                        <td>@emp.LastName</td>
+                        <td>30</td>
+
+                        <td>
+                            <div class=" btn-group" role="group">
+                                <a asp-controller="Employee" asp-action="AddSeaDay" asp-route-id="@emp.SeaDay" class="btn btn-success mx-2">
+                                    <i class="bi bi-water"></i> + 1
+                                </a>
+                                <a asp-controller="Employee" asp-action="RemoveSeaDay" asp-route-id="@emp.SeaDay" class="btn btn-warning mx-2">
+                                    <i class="bi bi-water"></i> - 1
+                                </a>
+                                <a asp-controller="Employee" asp-action="Edit" asp-route-id="@emp.AM" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil"></i> Επεξεργασία
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

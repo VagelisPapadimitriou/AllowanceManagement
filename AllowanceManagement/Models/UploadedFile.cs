@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AllowanceManagement.Models
 {
-    public class UploadedFiles
+    public class UploadedFile
     {
         [Key]
         public int FileId { get; set; }

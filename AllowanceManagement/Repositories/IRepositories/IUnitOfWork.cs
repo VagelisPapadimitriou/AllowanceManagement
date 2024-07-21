@@ -3,10 +3,9 @@
     public interface IUnitOfWork
     {
         IEmployeeRepository Employee { get; }
-        ICategoryPercentagesRepository CategoryPercentages { get; }
-        IRankAllowancesRepository RankAllowances { get; }
-        ISeaDaysRepository SeaDays { get; }
-        IUploadedFilesRepository UploadedFiles { get; }
+        ICategoryPercentageRepository CategoryPercentage { get; }
+        IRankAmountRepository RankAmount { get; }
+        IUploadedFileRepository UploadedFile { get; }
 
         void Save();
     }

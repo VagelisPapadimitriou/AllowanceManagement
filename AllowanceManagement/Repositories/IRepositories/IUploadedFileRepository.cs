@@ -2,7 +2,7 @@
 
 namespace AllowanceManagement.Repositories.IRepositories
 {
-    public interface ISeaDaysRepository : IRepository<SeaDays>
+    public interface IUploadedFileRepository : IRepository<UploadedFile>
     {
     }
 }

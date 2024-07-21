@@ -1,0 +1,45 @@
+﻿@model CategoryPercentage
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Διαγραφή Κατηγορίας</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row">
+            <div class="border p-3">
+                <input type="hidden" asp-for="CategoryId" />
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Category" class="form-control border-0 shadow" />
+                    <label asp-for="Category" class="ms-2"></label>
+                </div>
+
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Percentage" class="form-control border-0 shadow" />
+                    <label asp-for="Percentage" class="ms-2"></label>
+                </div>
+
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Description" class="form-control border-0 shadow" />
+                    <label asp-for="Description" class="ms-2"></label>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col-6 col-md-4">
+                        <button type="submit" class="btn btn-danger form-control" onclick="return confirm('Είστε σίγουρος για τη ΔΙΑΓΡΑΦΗ;');">Διαγραφή</button>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <a asp-controller="CategoryPercentage" asp-action="Index" class="btn btn-outline-primary border form-control">
+                            Επιστροφή
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>

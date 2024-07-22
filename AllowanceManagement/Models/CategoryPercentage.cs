@@ -18,6 +18,7 @@ namespace AllowanceManagement.Models
         [DisplayName("Ποσοστό")]
         [Range(0.0, 1.0)]
         [Column(TypeName = "decimal(5, 2)")]
+       
         public decimal Percentage { get; set; }
 
         [Required(ErrorMessage = "Η Περιγραφή είναι υποχρεωτική")]

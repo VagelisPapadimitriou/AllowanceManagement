@@ -83,6 +83,7 @@ namespace AllowanceManagement.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
@@ -96,6 +97,7 @@ namespace AllowanceManagement.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("RankAmountId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("SeaDay")
@@ -235,8 +237,7 @@ namespace AllowanceManagement.Migrations
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
@@ -250,11 +251,15 @@ namespace AllowanceManagement.Migrations
                 {
                     b.HasOne("AllowanceManagement.Models.CategoryPercentage", "CategoryPercentage")
                         .WithMany("Employees")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AllowanceManagement.Models.RankAmount", "RankAmount")
                         .WithMany("Employees")
-                        .HasForeignKey("RankAmountId");
+                        .HasForeignKey("RankAmountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CategoryPercentage");
 

@@ -16,7 +16,8 @@
                     <label asp-for="AM" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    GIA TO RANK
+                    <input value="@Model.RankAmount.Rank / @Model.RankAmount.Duty" disabled class="form-control border-0 shadow" />
+                    <label asp-for="RankAmount.Rank" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-2 col-12">
                     <input asp-for="FirstName" disabled class="form-control border-0 shadow" />
@@ -27,13 +28,10 @@
                     <label asp-for="LastName" class="ms-2"></label>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input class="form-control border-0 shadow" />
-                    <label class="ms-2">ΚΕΝΟ</label>
+                    <input value="@Model.CategoryPercentage.Category / @Model.CategoryPercentage.Description" disabled class="form-control border-0 shadow" />
+                    <label asp-for="CategoryPercentage.Category" class="ms-2"></label>
                 </div>
-                <div class="form-floating py-2 col-12">
-                    <input class="form-control border-0 shadow" />
-                    <label class="ms-2">ΚΕΝΟ</label>
-                </div>
+
                     <div class="row pt-2">
                         <div class="col-6 col-md-4">
                              <button type="submit" class="btn btn-danger form-control" onclick="return confirm('Είστε σίγουρος για τη ΔΙΑΓΡΑΦΗ;');">Διαγραφή</button>

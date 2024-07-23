@@ -18,7 +18,11 @@
                     <span asp-validation-for="AM" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                   KENO RANK
+                    <select asp-for="RankAmountId" class="form-control border-0 shadow" asp-items="@(new SelectList(ViewBag.RankAmounts, "Value", "Text"))">
+                        <option value="">Επιλογή Βαθμού / Καθήκον</option>
+                    </select>
+                    <label asp-for="RankAmount.Rank" class="ms-2"></label>
+                    <span asp-validation-for="RankAmountId" class="text-danger"></span>
                 </div>
 
                 <div class="form-floating py-2 col-12">
@@ -31,13 +35,13 @@
                     <label asp-for="LastName" class="ms-2"></label>
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
+
                 <div class="form-floating py-2 col-12">
-                    <input class="form-control border-0 shadow" />
-                    <label class="ms-2">ΚΕΝΟ</label>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input class="form-control border-0 shadow" />
-                    <label class="ms-2">ΚΕΝΟ</label>
+                    <select asp-for="CategoryId" class="form-control border-0 shadow" asp-items="@(new SelectList(ViewBag.Categories , "Value", "Text"))">
+                        <option value="">Επιλογή Κατηγορίας / Ποσοστό</option>
+                    </select>
+                    <label asp-for="CategoryPercentage.Category" class="ms-2"></label>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
                     <div class="row pt-2">
                         <div class="col-6 col-md-4">

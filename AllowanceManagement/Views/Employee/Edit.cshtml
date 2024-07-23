@@ -19,7 +19,10 @@
                     <span asp-validation-for="AM" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                   GIA TO RANK
+                    <select asp-for="RankAmountId" class="form-control border-0 shadow" asp-items="@(new SelectList(ViewBag.RankAmounts, "Value", "Text"))">
+                    </select>
+                    <label asp-for="RankAmount.Rank" class="ms-2"></label>
+                    <span asp-validation-for="RankAmountId" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
                     <input asp-for="FirstName" class="form-control border-0 shadow" />
@@ -30,12 +33,10 @@
                     <label asp-for="LastName" class="ms-2"></label>
                     <span asp-validation-for="LastName" class="text-danger"></span>
                     <div class="form-floating py-2 col-12">
-                        <input class="form-control border-0 shadow" />
-                        <label class="ms-2">ΚΕΝΟ</label>
-                    </div>
-                    <div class="form-floating py-2 col-12">
-                        <input class="form-control border-0 shadow" />
-                        <label class="ms-2">ΚΕΝΟ</label>
+                        <select asp-for="CategoryId" class="form-control border-0 shadow" asp-items="@(new SelectList(ViewBag.Categories , "Value", "Text"))">
+                        </select>
+                        <label asp-for="CategoryPercentage.Category" class="ms-2"></label>
+                        <span asp-validation-for="CategoryPercentage.Category" class="text-danger"></span>
                     </div>
 
                     <div class="row pt-2">

@@ -12,7 +12,7 @@ namespace AllowanceManagement.Repositories
 
         public IEnumerable<Employee> GetAllEmployeesWithRanksAndCategories()
         {
-            return Context.Set<Employee>()
+            return ApplicationDbContext.Employees
                  .Include(e => e.RankAmount)
                  .Include(e => e.CategoryPercentage)
                  .ToList();

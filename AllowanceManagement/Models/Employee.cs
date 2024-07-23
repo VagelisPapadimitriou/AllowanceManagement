@@ -23,15 +23,17 @@ namespace AllowanceManagement.Models
         public string LastName { get; set; }
 
         [DisplayName("Πλεύσιμες Ημέρες")]
-        public int SeaDay { get; set; }
+        public int SeaDay { get; set; } = 0;
 
 
         // Foreign key for RankAmount
+        [Required(ErrorMessage = "Ο Βαθμός είναι υποχρεωτικός")]
         [ForeignKey("RankAmount")]
         public int? RankAmountId { get; set; }
         public RankAmount? RankAmount { get; set; }
 
         // Foreign key for CategoryPercentage
+        [Required(ErrorMessage = "Η Κατηγορία είναι υποχρεωτική")]
         [ForeignKey("CategoryPercentage")]
         public int? CategoryId { get; set; }
         public CategoryPercentage? CategoryPercentage { get; set; }

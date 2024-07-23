@@ -1,4 +1,4 @@
-﻿List<Employee>
+﻿@model List<Employee>
 
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-dark bg-gradient ml-0 py-3">
@@ -14,9 +14,16 @@
             </div>
             <div class="row">
                 <div class="col-8 text-end">
-                    <a asp-controller="Employee" asp-action="AnotherAction" class="btn btn-outline-success">
-                        <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i> Προσθήκη Αρχείου <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i>
-                    </a>
+                    <form asp-controller="Employee" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <label class="btn btn-outline-success">
+                                <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i> Προσθήκη Αρχείου <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i>
+                                <input type="file" name="file" class="d-none" id="fileInput" onchange="document.getElementById('fileName').innerHTML = this.files[0].name">
+                            </label>
+                            <span id="fileName" class="text-info align-self-center ms-3"></span>
+                            <button type="submit" class="btn btn-outline-success ms-2">OK</button>
+                        </div>
+                    </form>
                 </div>
                 <div class="col-4 text-end">
                     <a asp-controller="Employee" asp-action="Create" class="btn btn-info">
@@ -29,10 +36,13 @@
         <table class="table table-bordered table-striped text-center" style="vertical-align: middle;">
             <thead>
                 <tr>
-                    <th style ="width: 10%;">ΑΜ</th>
-                    <th style ="width: 35%;">Βαθμός</th>
+                    <th style ="width: 5%;">ΑΜ</th>
+                    <th style ="width: 10%;">Βαθμός</th>
+                    <th style ="width: 10%;">Κατηγορία</th>
+                    <th style ="width: 15%;">Καθήκον</th>
                     <th style ="width: 15%;">Επώνυμο</th>
                     <th style ="width: 10%;">Πλεύσιμες</th>
+                    <th style ="width: 5%;">Δικαιούμενο Ποσό</th>
                     <th style ="width: 30%;">Επιλογές </th>
                 </tr>
             </thead>
@@ -41,18 +51,27 @@
                 {
                     <tr>
                         <td>@emp.AM</td>
-                        <td>KENO RANK</td>
+                        <td>@emp.RankAmount.Rank</td>
+                        <td>@emp.CategoryPercentage.Category</td>
+                        <td>@emp.RankAmount.Duty</td>
                         <td>@emp.LastName</td>
-                        <td>30</td>
+                        <td>@emp.SeaDay</td>
+                        <td>@((emp.RankAmount.BaseAmount * emp.CategoryPercentage.Percentage).ToString("F2")) €</td>
 
                         <td>
                             <div class=" btn-group" role="group">
-                                <a asp-controller="Employee" asp-action="AddSeaDay" asp-route-id="@emp.SeaDay" class="btn btn-success mx-2">
-                                    <i class="bi bi-water"></i> + 1
-                                </a>
-                                <a asp-controller="Employee" asp-action="RemoveSeaDay" asp-route-id="@emp.SeaDay" class="btn btn-warning mx-2">
-                                    <i class="bi bi-water"></i> - 1
-                                </a>
+                                <form asp-controller="Employee" asp-action="AddSeaDay" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@emp.AM" />
+                                    <button type="submit" class="btn btn-success mx-2">
+                                        <i class="bi bi-water"></i> + 1
+                                    </button>
+                                </form>
+                                <form asp-controller="Employee" asp-action="RemoveSeaDay" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@emp.AM" />
+                                    <button type="submit" class="btn btn-warning mx-2">
+                                        <i class="bi bi-water"></i> - 1
+                                    </button>
+                                </form>
                                 <a asp-controller="Employee" asp-action="Edit" asp-route-id="@emp.AM" class="btn btn-primary mx-2">
                                     <i class="bi bi-pencil"></i> Επεξεργασία
                                 </a>

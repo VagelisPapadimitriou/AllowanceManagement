@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AllowanceManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class RelationsSeedCRUD : Migration
+    public partial class UploadFile : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,7 +51,7 @@ namespace AllowanceManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FileName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,8 +66,8 @@ namespace AllowanceManagement.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SeaDay = table.Column<int>(type: "int", nullable: false),
-                    RankAmountId = table.Column<int>(type: "int", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                    RankAmountId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,12 +76,14 @@ namespace AllowanceManagement.Migrations
                         name: "FK_Employees_CategoryPercentages_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "CategoryPercentages",
-                        principalColumn: "CategoryId");
+                        principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Employees_RankAmounts_RankAmountId",
                         column: x => x.RankAmountId,
                         principalTable: "RankAmounts",
-                        principalColumn: "RankAmountId");
+                        principalColumn: "RankAmountId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(

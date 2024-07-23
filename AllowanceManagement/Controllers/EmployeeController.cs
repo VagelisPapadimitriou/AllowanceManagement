@@ -22,6 +22,8 @@ namespace AllowanceManagement.Controllers
 
         public IActionResult Create()
         {
+            PopulateRankWithDuty();
+            PopulateCategoryWithPercentage();
             return View();
         }
 
@@ -34,6 +36,11 @@ namespace AllowanceManagement.Controllers
             //    ModelState.AddModelError("FirstName", "Το όνομα δεν μπορεί να είναι test");
             //}
 
+            if (_unitOfWork.Employee.Get(e => e.AM == emp.AM) != null)
+            {
+                ModelState.AddModelError("AM", "Αυτός ο Αριθμός Μητρώου είναι ήδη καταχωρημένος.");
+            }
+
             if (ModelState.IsValid)
             {
                 _unitOfWork.Employee.Add(emp);
@@ -42,6 +49,8 @@ namespace AllowanceManagement.Controllers
                 return RedirectToAction("Index", "Employee");
             }
 
+            PopulateRankWithDuty();
+            PopulateCategoryWithPercentage();
             return View(emp);
 
         }
@@ -58,6 +67,8 @@ namespace AllowanceManagement.Controllers
                 return NotFound();
             }
 
+            PopulateRankWithDuty();
+            PopulateCategoryWithPercentage();
             return View(employeeFromDb);
         }
 
@@ -72,6 +83,8 @@ namespace AllowanceManagement.Controllers
                 return RedirectToAction("Index", "Employee");
             }
 
+            PopulateRankWithDuty();
+            PopulateCategoryWithPercentage();
             return View(emp);
 
         }
@@ -83,7 +96,13 @@ namespace AllowanceManagement.Controllers
             {
                 return NotFound();
             }
-            Employee? employeeFromDb = _unitOfWork.Employee.Get(emp => emp.AM == id);
+
+            Employee? employeeFromDb = _unitOfWork.Employee.Get(
+                emp => emp.AM == id,
+                include: query =>query.Include(emp => emp.RankAmount)
+                                      .Include(emp => emp.CategoryPercentage)
+                );
+
             if (employeeFromDb == null)
             {
                 return NotFound();
@@ -106,6 +125,98 @@ namespace AllowanceManagement.Controllers
             _unitOfWork.Save();
             TempData["success"] = "Επιτυχής Διαγραφή Προσωπικού";
             return RedirectToAction("Index", "Employee");
+        }
+
+        [HttpPost]
+        public IActionResult AddSeaDay(string id)
+        {
+            var employee = _unitOfWork.Employee.Get(e => e.AM == id);
+            if (employee != null)
+            {
+                employee.SeaDay += 1;
+                _unitOfWork.Employee.Update(employee);
+                _unitOfWork.Save();
+                TempData["success"] = "Πλεύσιμες ημέρες αυξήθηκαν.";
+            }
+            return RedirectToAction("Index", "Employee");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveSeaDay(string id)
+        {
+            var employee = _unitOfWork.Employee.Get(e => e.AM == id);
+            if (employee != null && employee.SeaDay > 0)
+            {
+                employee.SeaDay -= 1;
+                _unitOfWork.Employee.Update(employee);
+                _unitOfWork.Save();
+                TempData["success"] = "Πλεύσιμες ημέρες μειώθηκαν.";
+            }
+            return RedirectToAction("Index", "Employee");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                TempData["error"] = "Παρακαλώ επιλέξτε ένα αρχείο.";
+                return RedirectToAction("Index");
+            }
+
+            if (Path.GetExtension(file.FileName).ToLower() != ".txt")
+            {
+                TempData["error"] = "Παρακαλώ επιλέξτε ένα αρχείο κειμένου (.txt).";
+                return RedirectToAction("Index");
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
+
+            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var uploadedFile = new UploadedFile
+            {
+                FileName = file.FileName,
+                UploadDate = DateTime.Now,
+                FilePath = filePath
+            };
+
+            _unitOfWork.UploadedFile.Add(uploadedFile);
+            _unitOfWork.Save();
+
+            TempData["success"] = "Το αρχείο ανέβηκε επιτυχώς.";
+            return RedirectToAction("Index");
+        }
+
+
+
+
+        private void PopulateRankWithDuty()
+        {
+            var rankAmounts = _unitOfWork.RankAmount.GetAll().Select(r => new SelectListItem
+            {
+                Value = r.RankAmountId.ToString(),
+                Text = $"{r.Rank} / {r.Duty}"
+            }).ToList();
+            ViewBag.RankAmounts = rankAmounts;
+        }
+
+        private void PopulateCategoryWithPercentage()
+        {
+            var categories = _unitOfWork.CategoryPercentage.GetAll().Select(cp => new SelectListItem
+            {
+                Value = cp.CategoryId.ToString(),
+                Text = $"{cp.Category} / {cp.Description}"
+            }).ToList();
+            ViewBag.Categories = categories;
         }
 
     }

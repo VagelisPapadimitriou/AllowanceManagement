@@ -9,41 +9,30 @@
         </div>
     </div>
     <div class="card-body p-4">
-        <div class="row pb-3">
-            <div class="col-6">
+        <div class="d-flex justify-content-between pb-3">
+            <div>
+                <a asp-controller="UploadedFile" asp-action="Index" class="btn btn-outline-warning">
+                    <i class="bi bi-plus-square"></i> Διαχείρηση Αρχείων
+                </a>
             </div>
-            <div class="row">
-                <div class="col-8 text-end">
-                    <form asp-controller="Employee" asp-action="UploadFile" method="post" enctype="multipart/form-data">
-                        <div class="input-group">
-                            <label class="btn btn-outline-success">
-                                <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i> Προσθήκη Αρχείου <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i>
-                                <input type="file" name="file" class="d-none" id="fileInput" onchange="document.getElementById('fileName').innerHTML = this.files[0].name">
-                            </label>
-                            <span id="fileName" class="text-info align-self-center ms-3"></span>
-                            <button type="submit" class="btn btn-outline-success ms-2">OK</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-4 text-end">
-                    <a asp-controller="Employee" asp-action="Create" class="btn btn-info">
-                        <i class="bi bi-plus-square"></i> Προσθήκη Προσωπικού
-                    </a>
-                </div>
+            <div>
+                <a asp-controller="Employee" asp-action="Create" class="btn btn-info">
+                    <i class="bi bi-plus-square"></i> Προσθήκη Προσωπικού
+                </a>
             </div>
         </div>
 
         <table class="table table-bordered table-striped text-center" style="vertical-align: middle;">
             <thead>
                 <tr>
-                    <th style ="width: 5%;">ΑΜ</th>
-                    <th style ="width: 10%;">Βαθμός</th>
-                    <th style ="width: 10%;">Κατηγορία</th>
-                    <th style ="width: 15%;">Καθήκον</th>
-                    <th style ="width: 15%;">Επώνυμο</th>
-                    <th style ="width: 10%;">Πλεύσιμες</th>
-                    <th style ="width: 5%;">Δικαιούμενο Ποσό</th>
-                    <th style ="width: 30%;">Επιλογές </th>
+                    <th style="width: 5%;">ΑΜ</th>
+                    <th style="width: 10%;">Βαθμός</th>
+                    <th style="width: 10%;">Κατηγορία</th>
+                    <th style="width: 15%;">Καθήκον</th>
+                    <th style="width: 15%;">Επώνυμο</th>
+                    <th style="width: 10%;">Πλεύσιμες</th>
+                    <th style="width: 5%;">Δικαιούμενο Ποσό</th>
+                    <th style="width: 30%;">Επιλογές </th>
                 </tr>
             </thead>
             <tbody>
@@ -83,3 +72,9 @@
         </table>
     </div>
 </div>
+
+@* edw na ftiaksw to session scripts
+
+        edw me jQuery na edopizw ta AddSeaDay kai RemoveSeaDay kai na kanw ajax request ston
+        EmployeeController kai na dw ti allazw sto RemoveSeaDay kai na dw to return,
+        tha exei return (se Json)??? i tpt?? *@

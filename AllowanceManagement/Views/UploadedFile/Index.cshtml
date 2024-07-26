@@ -1,0 +1,113 @@
+﻿@model List<UploadedFile>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-dark bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Διαχείρηση Αρχείων</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-8 text-end">
+                <form asp-controller="UploadedFile" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                    <div class="input-group">
+                        <label class="btn btn-outline-success">
+                            <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i> Προσθήκη Αρχείου <i class="bi bi-tsunami"></i><i class="bi bi-tsunami"></i>
+                            <input type="file" name="file" class="d-none" id="fileInput" onchange="document.getElementById('fileName').innerHTML = this.files[0].name">
+                        </label>
+                        <span id="fileName" class="text-info align-self-center ms-3"></span>
+                        <button type="submit" class="btn btn-outline-success ms-2">OK</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped text-center" style="vertical-align: middle;">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Α/Α</th>
+                    <th style="width: 40%;">Όνομα Αρχείου</th>
+                    <th style="width: 25%;">Ημερομηνία/Ώρα Προσθήκης</th>
+                    <th style="width: 30%;">Επιλογές </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int counter = 1;
+                }
+                @foreach (var uf in Model)
+                {
+                    <tr>
+                        <td>@counter</td>
+                        <td>@uf.FileName</td>
+                        <td>@uf.UploadDate.ToString("dd'/'MM'/'yyyy (HH:mm)")</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button onclick="handleFileAction('@uf.FileId', '@uf.FileName')" class="btn btn-success mx-2">
+                                    <i class="bi bi-pencil"></i> Άνοιγμα
+                                </button>
+                                <form asp-controller="UploadedFile" asp-action="Delete" method="post" class="d-inline" onclick="return confirm('Είστε σίγουρος για τη ΔΙΑΓΡΑΦΗ;');">
+                                    <input type="hidden" name="id" value="@uf.FileId" />
+                                    <button type="submit" class="btn btn-danger mx-2">
+                                        <i class="bi bi-trash3"></i> Διαγραφή
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    counter++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@*Modal to open or save the file *@
+<div class="modal fade" id="fileActionModal" tabindex="-1" aria-labelledby="fileActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fileActionModalLabel">Επιλογή Ενέργειας</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Θέλετε να ανοίξετε ή να κατεβάσετε το αρχείο;
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" id="openButton">Άνοιγμα</button>
+                <button type="button" class="btn btn-outline-warning" id="downloadButton">Κατέβασμα</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function handleFileAction(fileId, fileName) {
+            var modal = new bootstrap.Modal(document.getElementById('fileActionModal'), {
+                keyboard: false
+            });
+
+            document.getElementById('openButton').onclick = function () {
+                window.open('/UploadedFile/Open/' + fileId, '_blank');
+                modal.hide();
+            };
+
+            document.getElementById('downloadButton').onclick = function () {
+                window.location.href = '/UploadedFile/Download/' + fileId;
+                modal.hide();
+            };
+
+            modal.show();
+        }
+    </script>
+}

@@ -18,10 +18,20 @@ namespace AllowanceManagement.Repositories
                  .ToList();
         }
 
+        public Employee GetEmployeeWithRankAndCategorie(string id)
+        {
+            return ApplicationDbContext.Employees
+                 .Include(e => e.RankAmount)
+                 .Include(e => e.CategoryPercentage)
+                 .Where(e => e.AM == id)
+                 .FirstOrDefault();
+        }
+
+
         public void Update(Employee emp)
         {
             Context.Update(emp);
-        } 
-        
+        }
+
     }
 }

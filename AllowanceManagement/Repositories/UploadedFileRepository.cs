@@ -8,9 +8,14 @@ namespace AllowanceManagement.Repositories
     {
         public UploadedFileRepository(ApplicationDbContext context) : base(context) { }
         public ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
-        public void Update()
-        {
 
+        public IEnumerable<UploadedFile> GetFileList()
+        {
+            return ApplicationDbContext.UploadedFiles.ToList();
+        }
+        public void Update(UploadedFile uploadedFile)
+        {
+            Context.Update(uploadedFile);
         }
     }
 }

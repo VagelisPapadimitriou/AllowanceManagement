@@ -4,6 +4,7 @@ using AllowanceManagement.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace AllowanceManagement.Controllers
 {
@@ -97,11 +98,7 @@ namespace AllowanceManagement.Controllers
                 return NotFound();
             }
 
-            Employee? employeeFromDb = _unitOfWork.Employee.Get(
-                emp => emp.AM == id,
-                include: query =>query.Include(emp => emp.RankAmount)
-                                      .Include(emp => emp.CategoryPercentage)
-                );
+            Employee? employeeFromDb = _unitOfWork.Employee.GetEmployeeWithRankAndCategorie(id);
 
             if (employeeFromDb == null)
             {
@@ -139,6 +136,8 @@ namespace AllowanceManagement.Controllers
                 TempData["success"] = "Πλεύσιμες ημέρες αυξήθηκαν.";
             }
             return RedirectToAction("Index", "Employee");
+            //Json(employee);
+
         }
 
         [HttpPost]
@@ -155,49 +154,13 @@ namespace AllowanceManagement.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public IActionResult SeaDayManagement()
         {
-            if (file == null || file.Length == 0)
-            {
-                TempData["error"] = "Παρακαλώ επιλέξτε ένα αρχείο.";
-                return RedirectToAction("Index");
-            }
+            List<Employee> employeesList = _unitOfWork.Employee.GetAllEmployeesWithRanksAndCategories().ToList();
+            PopulateFiles();
 
-            if (Path.GetExtension(file.FileName).ToLower() != ".txt")
-            {
-                TempData["error"] = "Παρακαλώ επιλέξτε ένα αρχείο κειμένου (.txt).";
-                return RedirectToAction("Index");
-            }
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
-
-            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-            }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var uploadedFile = new UploadedFile
-            {
-                FileName = file.FileName,
-                UploadDate = DateTime.Now,
-                FilePath = filePath
-            };
-
-            _unitOfWork.UploadedFile.Add(uploadedFile);
-            _unitOfWork.Save();
-
-            TempData["success"] = "Το αρχείο ανέβηκε επιτυχώς.";
-            return RedirectToAction("Index");
+            return View(employeesList);
         }
-
-
-
 
         private void PopulateRankWithDuty()
         {
@@ -217,6 +180,16 @@ namespace AllowanceManagement.Controllers
                 Text = $"{cp.Category} / {cp.Description}"
             }).ToList();
             ViewBag.Categories = categories;
+        }
+
+        private void PopulateFiles()
+        {
+            var filesList = _unitOfWork.UploadedFile.GetFileList().Select(f => new SelectListItem
+            {
+                Value = f.FileId.ToString(),
+                Text = f.FileName
+            }).ToList();
+            ViewBag.Files = filesList;
         }
 
     }

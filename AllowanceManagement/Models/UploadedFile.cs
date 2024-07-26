@@ -16,6 +16,6 @@ namespace AllowanceManagement.Models
         public DateTime UploadDate { get; set; }
 
         [Required]
-        public string FilePath { get; set; }
+        public byte[] FileContent { get; set; }
     }
 }

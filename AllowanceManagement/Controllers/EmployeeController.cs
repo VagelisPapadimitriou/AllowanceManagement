@@ -1,10 +1,12 @@
 ﻿using AllowanceManagement.Data;
 using AllowanceManagement.Models;
+using AllowanceManagement.Repositories;
 using AllowanceManagement.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace AllowanceManagement.Controllers
 {
@@ -21,6 +23,13 @@ namespace AllowanceManagement.Controllers
             return View(employeesList);
         }
 
+        public IActionResult SeaDayManagement()
+        {
+            List<Employee> employeesList = _unitOfWork.Employee.GetAllEmployeesWithRanksAndCategories().ToList();
+            PopulateFiles();
+
+            return View(employeesList);
+        }
         public IActionResult Create()
         {
             PopulateRankWithDuty();
@@ -154,13 +163,70 @@ namespace AllowanceManagement.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
-        public IActionResult SeaDayManagement()
-        {
-            List<Employee> employeesList = _unitOfWork.Employee.GetAllEmployeesWithRanksAndCategories().ToList();
-            PopulateFiles();
 
-            return View(employeesList);
+        [HttpPost]
+        public IActionResult IncreaseSeaDays([FromBody] JsonElement data)
+        {
+            if (data.ValueKind != JsonValueKind.Object || !data.TryGetProperty("employeeIds", out var employeeIdsElement) || !data.TryGetProperty("days", out var daysElement))
+            {
+                return Json(new { success = false, message = "Invalid data." });
+            }
+
+            var employeeIds = JsonSerializer.Deserialize<List<string>>(employeeIdsElement.GetRawText());
+            int days = daysElement.GetInt32();
+
+            if (employeeIds == null || employeeIds.Count == 0 || days < 1)
+            {
+                return Json(new { success = false, message = "Invalid data." });
+            }
+
+            foreach (var id in employeeIds)
+            {
+                var employee = _unitOfWork.Employee.Get(e => e.AM == id);
+                if (employee != null)
+                {
+                    employee.SeaDay += days;
+                    _unitOfWork.Employee.Update(employee);
+                }
+            }
+            _unitOfWork.Save();
+            TempData["success"] = "Πλεύσιμες ημέρες αυξήθηκαν για το επιλεγμένο προσωπικό.";
+            return Json(new { success = true });
         }
+
+        [HttpPost]
+        public IActionResult DecreaseSeaDays([FromBody] JsonElement data)
+        {
+            if (data.ValueKind != JsonValueKind.Object || !data.TryGetProperty("employeeIds", out var employeeIdsElement) || !data.TryGetProperty("days", out var daysElement))
+            {
+                return Json(new { success = false, message = "Invalid data." });
+            }
+
+            var employeeIds = JsonSerializer.Deserialize<List<string>>(employeeIdsElement.GetRawText());
+            int days = daysElement.GetInt32();
+
+            if (employeeIds == null || employeeIds.Count == 0 || days < 1)
+            {
+                return Json(new { success = false, message = "Invalid data." });
+            }
+
+            foreach (var id in employeeIds)
+            {
+                var employee = _unitOfWork.Employee.Get(e => e.AM == id);
+                if (employee != null)
+                {
+                    if (employee.SeaDay >= days)
+                    {
+                        employee.SeaDay -= days;
+                        _unitOfWork.Employee.Update(employee);
+                    }
+                }
+            }
+            _unitOfWork.Save();
+            TempData["success"] = "Πλεύσιμες ημέρες μειώθηκαν για το επιλεγμένο προσωπικό.";
+            return Json(new { success = true });
+        }
+
 
         private void PopulateRankWithDuty()
         {

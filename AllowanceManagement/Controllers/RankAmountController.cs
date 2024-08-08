@@ -1,9 +1,11 @@
 ﻿using AllowanceManagement.Models;
 using AllowanceManagement.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllowanceManagement.Controllers
 {
+    [Authorize]
     public class RankAmountController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

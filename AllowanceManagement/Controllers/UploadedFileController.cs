@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AllowanceManagement.Controllers
 {
+    [Authorize]
     public class UploadedFileController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -9,18 +9,21 @@
         </div>
     </div>
     <div class="card-body p-4">
-        <div class="d-flex justify-content-between pb-3">
-            <div>
-                <a asp-controller="UploadedFile" asp-action="Index" class="btn btn-outline-warning">
-                    <i class="bi bi-plus-square"></i> Διαχείρηση Αρχείων
-                </a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="d-flex justify-content-between pb-3">
+                <div>
+                    <a asp-controller="UploadedFile" asp-action="Index" class="btn btn-outline-warning">
+                        <i class="bi bi-plus-square"></i> Διαχείρηση Αρχείων
+                    </a>
+                </div>
+                <div>
+                    <a asp-controller="Employee" asp-action="Create" class="btn btn-info">
+                        <i class="bi bi-plus-square"></i> Προσθήκη Προσωπικού
+                    </a>
+                </div>
             </div>
-            <div>
-                <a asp-controller="Employee" asp-action="Create" class="btn btn-info">
-                    <i class="bi bi-plus-square"></i> Προσθήκη Προσωπικού
-                </a>
-            </div>
-        </div>
+        }
 
         <table class="table table-bordered table-striped text-center" style="vertical-align: middle;">
             <thead>
@@ -32,7 +35,10 @@
                     <th style="width: 15%;">Επώνυμο</th>
                     <th style="width: 10%;">Πλεύσιμες</th>
                     <th style="width: 5%;">Δικαιούμενο Ποσό</th>
-                    <th style="width: 30%;">Επιλογές </th>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <th style="width: 30%;">Επιλογές </th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -46,35 +52,31 @@
                         <td>@emp.LastName</td>
                         <td>@emp.SeaDay</td>
                         <td>@((emp.RankAmount.BaseAmount * emp.CategoryPercentage.Percentage).ToString("F2")) €</td>
-
-                        <td>
-                            <div class=" btn-group" role="group">
-                                <form asp-controller="Employee" asp-action="AddSeaDay" method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="@emp.AM" />
-                                    <button type="submit" class="btn btn-success mx-2">
-                                        <i class="bi bi-water"></i> + 1
-                                    </button>
-                                </form>
-                                <form asp-controller="Employee" asp-action="RemoveSeaDay" method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="@emp.AM" />
-                                    <button type="submit" class="btn btn-warning mx-2">
-                                        <i class="bi bi-water"></i> - 1
-                                    </button>
-                                </form>
-                                <a asp-controller="Employee" asp-action="Edit" asp-route-id="@emp.AM" class="btn btn-primary mx-2">
-                                    <i class="bi bi-pencil"></i> Επεξεργασία
-                                </a>
-                            </div>
-                        </td>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <td>
+                                <div class=" btn-group" role="group">
+                                    <form asp-controller="Employee" asp-action="AddSeaDay" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@emp.AM" />
+                                        <button type="submit" class="btn btn-success mx-2">
+                                            <i class="bi bi-water"></i> + 1
+                                        </button>
+                                    </form>
+                                    <form asp-controller="Employee" asp-action="RemoveSeaDay" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@emp.AM" />
+                                        <button type="submit" class="btn btn-warning mx-2">
+                                            <i class="bi bi-water"></i> - 1
+                                        </button>
+                                    </form>
+                                    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@emp.AM" class="btn btn-primary mx-2">
+                                        <i class="bi bi-pencil"></i> Επεξεργασία
+                                    </a>
+                                </div>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
-
-@* edw na ftiaksw to session scripts
-
-        edw me jQuery na edopizw ta AddSeaDay kai RemoveSeaDay kai na kanw ajax request ston
-        EmployeeController kai na dw ti allazw sto RemoveSeaDay kai na dw to return,
-        tha exei return (se Json)??? i tpt?? *@

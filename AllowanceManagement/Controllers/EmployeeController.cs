@@ -2,6 +2,7 @@
 using AllowanceManagement.Models;
 using AllowanceManagement.Repositories;
 using AllowanceManagement.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace AllowanceManagement.Controllers
             return View(employeesList);
         }
 
+        [Authorize]
         public IActionResult SeaDayManagement()
         {
             List<Employee> employeesList = _unitOfWork.Employee.GetAllEmployeesWithRanksAndCategories().ToList();
@@ -30,6 +32,8 @@ namespace AllowanceManagement.Controllers
 
             return View(employeesList);
         }
+
+        [Authorize]
         public IActionResult Create()
         {
             PopulateRankWithDuty();
@@ -37,6 +41,7 @@ namespace AllowanceManagement.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Create(Employee emp)
         {
@@ -65,6 +70,7 @@ namespace AllowanceManagement.Controllers
 
         }
 
+        [Authorize]
         public IActionResult Edit(string? id)
         {
             if (string.IsNullOrEmpty(id))
@@ -82,6 +88,7 @@ namespace AllowanceManagement.Controllers
             return View(employeeFromDb);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Edit(Employee emp)
         {
@@ -99,7 +106,7 @@ namespace AllowanceManagement.Controllers
 
         }
 
-
+        [Authorize]
         public IActionResult Delete(string? id)
         {
             if (string.IsNullOrEmpty(id))
@@ -117,7 +124,7 @@ namespace AllowanceManagement.Controllers
             return View(employeeFromDb);
         }
 
-
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(string? id)
         {
@@ -133,6 +140,7 @@ namespace AllowanceManagement.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult AddSeaDay(string id)
         {
@@ -149,6 +157,7 @@ namespace AllowanceManagement.Controllers
 
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult RemoveSeaDay(string id)
         {
@@ -163,7 +172,7 @@ namespace AllowanceManagement.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
-
+        [Authorize]
         [HttpPost]
         public IActionResult IncreaseSeaDays([FromBody] JsonElement data)
         {
@@ -194,6 +203,7 @@ namespace AllowanceManagement.Controllers
             return Json(new { success = true });
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult DecreaseSeaDays([FromBody] JsonElement data)
         {

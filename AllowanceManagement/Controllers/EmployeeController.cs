@@ -106,6 +106,24 @@ namespace AllowanceManagement.Controllers
 
         }
 
+        public IActionResult Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var employee = _unitOfWork.Employee.GetEmployeeWithRankAndCategorie(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("_EmployeeDetailsPartial", employee);
+        }
+
+
+
         [Authorize]
         public IActionResult Delete(string? id)
         {
@@ -140,6 +158,10 @@ namespace AllowanceManagement.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
+
+
+
+
         [Authorize]
         [HttpPost]
         public IActionResult AddSeaDay(string id)
@@ -152,6 +174,7 @@ namespace AllowanceManagement.Controllers
                 _unitOfWork.Save();
                 TempData["success"] = "Πλεύσιμες ημέρες αυξήθηκαν.";
             }
+
             return RedirectToAction("Index", "Employee");
             //Json(employee);
 

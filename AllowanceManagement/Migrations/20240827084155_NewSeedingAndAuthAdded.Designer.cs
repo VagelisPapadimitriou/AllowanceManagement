@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AllowanceManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240808083814_Auth")]
-    partial class Auth
+    [Migration("20240827084155_NewSeedingAndAuthAdded")]
+    partial class NewSeedingAndAuthAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,84 +144,147 @@ namespace AllowanceManagement.Migrations
                             RankAmountId = 1,
                             BaseAmount = 1015.00m,
                             Duty = "Κυβερνήτης",
-                            Rank = "Πλοίαρχος/Αντιπλοίαρχος"
+                            Rank = "Πλοίαρχος"
                         },
                         new
                         {
                             RankAmountId = 2,
+                            BaseAmount = 1015.00m,
+                            Duty = "Κυβερνήτης",
+                            Rank = "Αντιπλοίαρχος"
+                        },
+                        new
+                        {
+                            RankAmountId = 3,
                             BaseAmount = 1015.00m,
                             Duty = "-",
                             Rank = "Διευθυντής ΑΣ/ΔΕΠΑ"
                         },
                         new
                         {
-                            RankAmountId = 3,
+                            RankAmountId = 4,
                             BaseAmount = 765.00m,
                             Duty = "Κυβερνήτης",
                             Rank = "Πλωτάρχης"
                         },
                         new
                         {
-                            RankAmountId = 4,
+                            RankAmountId = 5,
                             BaseAmount = 600.00m,
                             Duty = "Κυβερνήτης",
-                            Rank = "Υποπλοίαρχος/Ανθυποπλοίαρχος/Σημαιοφόρος"
-                        },
-                        new
-                        {
-                            RankAmountId = 5,
-                            BaseAmount = 670.00m,
-                            Duty = "Υ/Αος",
-                            Rank = "Ανώτερος Αξιωματικός"
+                            Rank = "Υποπλοίαρχος"
                         },
                         new
                         {
                             RankAmountId = 6,
                             BaseAmount = 600.00m,
-                            Duty = "-",
-                            Rank = "Ανώτερος Αξιωματικός"
+                            Duty = "Κυβερνήτης",
+                            Rank = "Ανθυποπλοίαρχος"
                         },
                         new
                         {
                             RankAmountId = 7,
-                            BaseAmount = 535.00m,
-                            Duty = "-",
-                            Rank = "Υποπλοίαρχος/Ανθυποπλοίαρχος"
+                            BaseAmount = 600.00m,
+                            Duty = "Κυβερνήτης",
+                            Rank = "Σημαιοφόρος"
                         },
                         new
                         {
                             RankAmountId = 8,
-                            BaseAmount = 510.00m,
-                            Duty = "-",
-                            Rank = "Σημαιοφόρος/Ανθυπασπιστής"
+                            BaseAmount = 670.00m,
+                            Duty = "Υ/Αος",
+                            Rank = "Αντιπλοίαρχος"
                         },
                         new
                         {
                             RankAmountId = 9,
+                            BaseAmount = 670.00m,
+                            Duty = "Υ/Αος",
+                            Rank = "Πλωτάρχης"
+                        },
+                        new
+                        {
+                            RankAmountId = 10,
+                            BaseAmount = 600.00m,
+                            Duty = "-",
+                            Rank = "Αντιπλοίαρχος"
+                        },
+                        new
+                        {
+                            RankAmountId = 11,
+                            BaseAmount = 600.00m,
+                            Duty = "-",
+                            Rank = "Πλωτάρχης"
+                        },
+                        new
+                        {
+                            RankAmountId = 12,
+                            BaseAmount = 535.00m,
+                            Duty = "-",
+                            Rank = "Υποπλοίαρχος"
+                        },
+                        new
+                        {
+                            RankAmountId = 13,
+                            BaseAmount = 535.00m,
+                            Duty = "-",
+                            Rank = "Ανθυποπλοίαρχος"
+                        },
+                        new
+                        {
+                            RankAmountId = 14,
+                            BaseAmount = 510.00m,
+                            Duty = "-",
+                            Rank = "Σημαιοφόρος"
+                        },
+                        new
+                        {
+                            RankAmountId = 15,
+                            BaseAmount = 510.00m,
+                            Duty = "-",
+                            Rank = "Ανθυπασπιστής"
+                        },
+                        new
+                        {
+                            RankAmountId = 16,
                             BaseAmount = 470.00m,
                             Duty = "-",
                             Rank = "Αρχικελευστής"
                         },
                         new
                         {
-                            RankAmountId = 10,
+                            RankAmountId = 17,
                             BaseAmount = 440.00m,
                             Duty = "-",
                             Rank = "Επικελευστής"
                         },
                         new
                         {
-                            RankAmountId = 11,
+                            RankAmountId = 18,
                             BaseAmount = 400.00m,
                             Duty = "-",
-                            Rank = "Κελευστής/Δίοπος"
+                            Rank = "Κελευστής"
                         },
                         new
                         {
-                            RankAmountId = 12,
+                            RankAmountId = 19,
+                            BaseAmount = 400.00m,
+                            Duty = "-",
+                            Rank = "Δίοπος"
+                        },
+                        new
+                        {
+                            RankAmountId = 20,
                             BaseAmount = 385.00m,
                             Duty = "-",
-                            Rank = "ΕΠΟΠ Ναύτης/ΟΒΑ"
+                            Rank = "ΕΠΟΠ Ναύτης"
+                        },
+                        new
+                        {
+                            RankAmountId = 21,
+                            BaseAmount = 385.00m,
+                            Duty = "-",
+                            Rank = "ΟΒΑ"
                         });
                 });
 

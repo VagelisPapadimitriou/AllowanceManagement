@@ -1,0 +1,34 @@
+﻿@model AllowanceManagement.Models.Employee
+
+<div class="row">
+    <div class="col-md-4">
+        <p><strong>ΑΜ:</strong> @Model.AM</p>
+        <p><strong>Βαθμός:</strong> @Model.RankAmount.Rank</p>
+        <p><strong>Καθήκον:</strong> @Model.RankAmount.Duty</p>
+    </div>
+    <div class="col-md-4">
+        <p>&nbsp;</p> <!-- Empty paragraph for spacing -->
+        <p><strong>Επώνυμο:</strong> @Model.LastName</p>
+        <p><strong>Δικαιούμενο Ποσό:</strong> @((Model.RankAmount.BaseAmount * Model.CategoryPercentage.Percentage).ToString("F2")) €</p>
+    </div>
+    <div class="col-md-4">
+        <p>&nbsp;</p> <!-- Empty paragraph for spacing -->
+        <p><strong>Όνομα:</strong> @Model.FirstName</p>
+        <p><strong>Πλεύσιμες:</strong> @Model.SeaDay</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            <strong>Κατηγορία:</strong> - @Model.CategoryPercentage.Category -
+            (@Model.CategoryPercentage.Description)
+        </p>
+    </div>
+</div>
+
+<hr/>
+
+<div class="row text-center">
+    <h3 class="text-primary">Υπολοιπόμενες Πλεύσιμες:  <strong>@((30 - @Model.SeaDay))</strong> </h3>
+</div>

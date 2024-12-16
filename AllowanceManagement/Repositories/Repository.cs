@@ -23,15 +23,7 @@ namespace AllowanceManagement.Repositories
         {
             return Context.Set<T>().FirstOrDefault(filter);
         }
-        public T Get(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IQueryable<T>> include)
-        {
-            IQueryable<T> query = Context.Set<T>();
-            if (include != null)
-            {
-                query = include(query);
-            }
-            return query.FirstOrDefault(filter);
-        }
+
         public IEnumerable<T> GetAll()
         {
             return Context.Set<T>().ToList();

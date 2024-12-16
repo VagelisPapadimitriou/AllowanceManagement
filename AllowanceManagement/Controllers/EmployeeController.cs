@@ -1,9 +1,12 @@
 ﻿using AllowanceManagement.Data;
 using AllowanceManagement.Models;
+using AllowanceManagement.Repositories;
 using AllowanceManagement.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace AllowanceManagement.Controllers
 {
@@ -20,6 +23,13 @@ namespace AllowanceManagement.Controllers
             return View(employeesList);
         }
 
+        public IActionResult SeaDayManagement()
+        {
+            List<Employee> employeesList = _unitOfWork.Employee.GetAllEmployeesWithRanksAndCategories().ToList();
+            PopulateFiles();
+
+            return View(employeesList);
+        }
         public IActionResult Create()
         {
             PopulateRankWithDuty();
@@ -97,11 +107,7 @@ namespace AllowanceManagement.Controllers
                 return NotFound();
             }
 
-            Employee? employeeFromDb = _unitOfWork.Employee.Get(
-                emp => emp.AM == id,
-                include: query =>query.Include(emp => emp.RankAmount)
-                                      .Include(emp => emp.CategoryPercentage)
-                );
+            Employee? employeeFromDb = _unitOfWork.Employee.GetEmployeeWithRankAndCategorie(id);
 
             if (employeeFromDb == null)
             {
@@ -139,6 +145,8 @@ namespace AllowanceManagement.Controllers
                 TempData["success"] = "Πλεύσιμες ημέρες αυξήθηκαν.";
             }
             return RedirectToAction("Index", "Employee");
+            //Json(employee);
+
         }
 
         [HttpPost]
@@ -155,48 +163,69 @@ namespace AllowanceManagement.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public IActionResult IncreaseSeaDays([FromBody] JsonElement data)
         {
-            if (file == null || file.Length == 0)
+            if (data.ValueKind != JsonValueKind.Object || !data.TryGetProperty("employeeIds", out var employeeIdsElement) || !data.TryGetProperty("days", out var daysElement))
             {
-                TempData["error"] = "Παρακαλώ επιλέξτε ένα αρχείο.";
-                return RedirectToAction("Index");
+                return Json(new { success = false, message = "Invalid data." });
             }
 
-            if (Path.GetExtension(file.FileName).ToLower() != ".txt")
+            var employeeIds = JsonSerializer.Deserialize<List<string>>(employeeIdsElement.GetRawText());
+            int days = daysElement.GetInt32();
+
+            if (employeeIds == null || employeeIds.Count == 0 || days < 1)
             {
-                TempData["error"] = "Παρακαλώ επιλέξτε ένα αρχείο κειμένου (.txt).";
-                return RedirectToAction("Index");
+                return Json(new { success = false, message = "Invalid data." });
             }
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
-
-            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+            foreach (var id in employeeIds)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                var employee = _unitOfWork.Employee.Get(e => e.AM == id);
+                if (employee != null)
+                {
+                    employee.SeaDay += days;
+                    _unitOfWork.Employee.Update(employee);
+                }
             }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var uploadedFile = new UploadedFile
-            {
-                FileName = file.FileName,
-                UploadDate = DateTime.Now,
-                FilePath = filePath
-            };
-
-            _unitOfWork.UploadedFile.Add(uploadedFile);
             _unitOfWork.Save();
-
-            TempData["success"] = "Το αρχείο ανέβηκε επιτυχώς.";
-            return RedirectToAction("Index");
+            TempData["success"] = "Πλεύσιμες ημέρες αυξήθηκαν για το επιλεγμένο προσωπικό.";
+            return Json(new { success = true });
         }
 
+        [HttpPost]
+        public IActionResult DecreaseSeaDays([FromBody] JsonElement data)
+        {
+            if (data.ValueKind != JsonValueKind.Object || !data.TryGetProperty("employeeIds", out var employeeIdsElement) || !data.TryGetProperty("days", out var daysElement))
+            {
+                return Json(new { success = false, message = "Invalid data." });
+            }
 
+            var employeeIds = JsonSerializer.Deserialize<List<string>>(employeeIdsElement.GetRawText());
+            int days = daysElement.GetInt32();
+
+            if (employeeIds == null || employeeIds.Count == 0 || days < 1)
+            {
+                return Json(new { success = false, message = "Invalid data." });
+            }
+
+            foreach (var id in employeeIds)
+            {
+                var employee = _unitOfWork.Employee.Get(e => e.AM == id);
+                if (employee != null)
+                {
+                    if (employee.SeaDay >= days)
+                    {
+                        employee.SeaDay -= days;
+                        _unitOfWork.Employee.Update(employee);
+                    }
+                }
+            }
+            _unitOfWork.Save();
+            TempData["success"] = "Πλεύσιμες ημέρες μειώθηκαν για το επιλεγμένο προσωπικό.";
+            return Json(new { success = true });
+        }
 
 
         private void PopulateRankWithDuty()
@@ -217,6 +246,16 @@ namespace AllowanceManagement.Controllers
                 Text = $"{cp.Category} / {cp.Description}"
             }).ToList();
             ViewBag.Categories = categories;
+        }
+
+        private void PopulateFiles()
+        {
+            var filesList = _unitOfWork.UploadedFile.GetFileList().Select(f => new SelectListItem
+            {
+                Value = f.FileId.ToString(),
+                Text = f.FileName
+            }).ToList();
+            ViewBag.Files = filesList;
         }
 
     }

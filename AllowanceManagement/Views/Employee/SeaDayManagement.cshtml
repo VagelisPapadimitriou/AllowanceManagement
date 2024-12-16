@@ -1,0 +1,227 @@
+﻿@model List<Employee>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-dark bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Διαχείρηση Πλεύσιμων Ημερών</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row">
+            <div class="col-12 col-md-7">
+                <!-- Seamanagement View -->
+                <div class="d-flex justify-content-start pb-3">
+                    <div class="col-8">
+                        <select class="form-select" id="fileDropdown">
+                            <option selected disabled>Επιλέξτε Αρχείο</option>
+                            @foreach (var file in ViewBag.Files)
+                            {
+                                <option value="@file.Value">@file.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto ms-4">
+                        <button class="btn btn-outline-success" id="openFileButton" style="display: none;">Άνοιγμα αρχείου</button>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped text-center" style="vertical-align: middle;">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">ΑΜ</th>
+                            <th style="width: 20%;">Βαθμός</th>
+                            <th style="width: 30%;">Επώνυμο</th>
+                            <th style="width: 10%;">Πλεύσιμες</th>
+                            <th style="width: 30%;">Προσθήκη Πλεύσιμων Ημερών</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var emp in Model)
+                        {
+                            <tr class="employee-row">
+                                <td>@emp.AM</td>
+                                <td>@emp.RankAmount.Rank</td>
+                                <td>@emp.LastName</td>
+                                <td>@emp.SeaDay</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <input type="checkbox" id="employee@emp.AM" class="form-check-input" value="@emp.AM">
+                                        <label for="employee@emp.AM" class="form-check-label"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                <div class="d-flex justify-content-start">
+                                    <div class="input-group" style="width: 50%;">
+                                        <span class="input-group-text">Πλέυσιμες Ημέρες</span>
+                                        <input type="number" class="form-control" id="days" name="days" min="1" value="1">
+                                    </div>
+                                    <button class="btn btn-outline-success ms-4" id="increaseDaysButton" type="button">Αύξηση Ημερών</button>
+                                    <button class="btn btn-outline-danger ms-4" id="decreaseDaysButton" type="button">Μείωση Ημερών</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-12 col-md-5">
+                <!-- File Viewer -->
+                <iframe id="fileViewer" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Function to handle row click events
+            $(".employee-row").click(function (event) {
+                handleRowClick(event, this);
+            });
+
+            // Function to handle checkbox toggling when a row is clicked
+            function handleRowClick(event, row) {
+                const target = $(event.target);
+                const isCheckboxOrLabel = target.hasClass("form-check-input") || target.hasClass("form-check-label");
+
+                if (!isCheckboxOrLabel) {
+                    const checkbox = $(row).find(".form-check-input");
+                    checkbox.prop("checked", !checkbox.prop("checked")); // Toggle the checkbox
+                }
+            }
+
+            // Function to handle file dropdown change event
+            $('#fileDropdown').change(function () {
+                var selectedFileId = $(this).val();
+                if (selectedFileId) {
+                    $('#openFileButton').show(); // Show the button when a file is selected
+                } else {
+                    $('#openFileButton').hide(); // Hide the button when no file is selected
+                }
+            });
+
+            // Function to handle open file button click event
+            $('#openFileButton').click(function () {
+                var selectedFileId = $('#fileDropdown').val();
+                if (selectedFileId) {
+                    $('#fileViewer').attr('src', '@Url.Action("Open", "UploadedFile")/' + selectedFileId); // Set the iframe src to the selected file URL
+                }
+            });
+
+            // Function to handle the "Αύξηση Ημερών Επιλεγμένου Προσωπικού" button click event
+            $('#increaseDaysButton').click(function (event) {
+                event.preventDefault(); // Prevent the default form submit
+
+                if (!confirm('Πρόκειται να αυξήσεις τις πλεύσιμες ημέρες του επιλεγμένου προσωπικού. Να προχωρήσω;')) {
+                    return;
+                }
+
+                // Collect all selected employee IDs
+                var selectedEmployeeIds = [];
+                $('.employee-row').each(function () {
+                    var checkbox = $(this).find('.form-check-input');
+                    if (checkbox.prop('checked')) {
+                        selectedEmployeeIds.push(checkbox.val());
+                    }
+                });
+
+                // Get the number of days to increase
+                var days = $('#days').val();
+
+                // Show a loading spinner or message
+                $('#increaseDaysButton').prop('disabled', true).text('Processing...');
+
+                // Send an AJAX request to the server to increase sea days
+                if (selectedEmployeeIds.length > 0 && days > 0) {
+                    $.ajax({
+                        url: '@Url.Action("IncreaseSeaDays", "Employee")',
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            employeeIds: selectedEmployeeIds,
+                            days: parseInt(days)
+                        }),
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(); // Reload the page to see the changes
+                            } else {
+                                alert('Error: ' + response.message);
+                                $('#increaseDaysButton').prop('disabled', false).text('Αύξηση Ημερών Επιλεγμένου Προσωπικού');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert('An error occurred. Please try again.');
+                            $('#increaseDaysButton').prop('disabled', false).text('Αύξηση Ημερών Επιλεγμένου Προσωπικού');
+                        }
+                    });
+                } else {
+                    alert('Please select at least one employee and enter a valid number of days.');
+                    $('#increaseDaysButton').prop('disabled', false).text('Αύξηση Ημερών Επιλεγμένου Προσωπικού');
+                }
+            });
+
+            // Function to handle the "Μείωση Ημερών Επιλεγμένου Προσωπικού" button click event
+            $('#decreaseDaysButton').click(function (event) {
+                event.preventDefault(); // Prevent the default form submit
+
+                if (!confirm('Πρόκειται να μειώσεις τις πλεύσιμες ημέρες του επιλεγμένου προσωπικού. Να προχωρήσω;')) {
+                    return;
+                }
+
+                // Collect all selected employee IDs
+                var selectedEmployeeIds = [];
+                $('.employee-row').each(function () {
+                    var checkbox = $(this).find('.form-check-input');
+                    if (checkbox.prop('checked')) {
+                        selectedEmployeeIds.push(checkbox.val());
+                    }
+                });
+
+                // Get the number of days to decrease
+                var days = $('#days').val();
+
+                // Show a loading spinner or message
+                $('#decreaseDaysButton').prop('disabled', true).text('Processing...');
+
+                // Send an AJAX request to the server to decrease sea days
+                if (selectedEmployeeIds.length > 0 && days > 0) {
+                    $.ajax({
+                        url: '@Url.Action("DecreaseSeaDays", "Employee")',
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            employeeIds: selectedEmployeeIds,
+                            days: parseInt(days)
+                        }),
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(); // Reload the page to see the changes
+                            } else {
+                                alert('Error: ' + response.message);
+                                $('#decreaseDaysButton').prop('disabled', false).text('Μείωση Ημερών Επιλεγμένου Προσωπικού');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert('An error occurred. Please try again.');
+                            $('#decreaseDaysButton').prop('disabled', false).text('Μείωση Ημερών Επιλεγμένου Προσωπικού');
+                        }
+                    });
+                } else {
+                    alert('Please select at least one employee and enter a valid number of days.');
+                    $('#decreaseDaysButton').prop('disabled', false).text('Μείωση Ημερών Επιλεγμένου Προσωπικού');
+                }
+            });
+        });
+    </script>
+}
+
